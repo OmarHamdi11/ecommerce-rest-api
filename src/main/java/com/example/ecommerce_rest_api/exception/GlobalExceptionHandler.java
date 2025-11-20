@@ -1,0 +1,59 @@
+package com.example.ecommerce_rest_api.exception;
+
+import com.example.ecommerce_rest_api.payload.ErrorDetail;
+import com.example.ecommerce_rest_api.response.ApiResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+
+import java.time.LocalDateTime;
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(TokenException.class)
+    public ResponseEntity<ApiResponse<Object>> handleTokenException(TokenException exception,
+                                                                    WebRequest request
+    ) {
+        ApiResponse<Object> response = ApiResponse.error(
+                HttpStatus.BAD_REQUEST.value(),
+                "An error occurred: " + exception.getMessage()
+        );
+        response.setPath(request.getDescription(false).replace("uri:",""));
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleResourceNotFoundException(
+            ResourceNotFoundException exception, WebRequest request
+    ){
+        ApiResponse<Object> response = ApiResponse.error(
+                HttpStatus.NOT_FOUND.value(),
+                "An error occurred: " + exception.getMessage()
+        );
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
+
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorDetail> handleGlobalException (Exception exception,
+                                                               WebRequest webRequest
+    ){
+        ErrorDetail errorDetail = new ErrorDetail(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                exception.getMessage(),
+                webRequest.getDescription(false)
+        );
+
+        return new ResponseEntity<>(errorDetail,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+}
