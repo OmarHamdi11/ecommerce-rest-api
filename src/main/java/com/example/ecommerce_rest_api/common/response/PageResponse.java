@@ -1,4 +1,4 @@
-package com.example.ecommerce_rest_api.response;
+package com.example.ecommerce_rest_api.common.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

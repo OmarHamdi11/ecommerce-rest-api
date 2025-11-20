@@ -1,4 +1,4 @@
-package com.example.ecommerce_rest_api.response;
+package com.example.ecommerce_rest_api.common.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

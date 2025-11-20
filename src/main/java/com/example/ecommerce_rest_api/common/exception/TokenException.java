@@ -1,4 +1,4 @@
-package com.example.ecommerce_rest_api.exception;
+package com.example.ecommerce_rest_api.common.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

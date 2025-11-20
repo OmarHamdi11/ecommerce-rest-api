@@ -1,4 +1,4 @@
-package com.example.ecommerce_rest_api.payload;
+package com.example.ecommerce_rest_api.common.DTOs;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ErrorDetail {
+public class ErrorDetailDTO {
     private LocalDateTime timeStamp;
     private HttpStatus status;
     private String message;

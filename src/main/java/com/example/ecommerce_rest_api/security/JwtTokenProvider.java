@@ -1,6 +1,6 @@
 package com.example.ecommerce_rest_api.security;
 
-import com.example.ecommerce_rest_api.exception.TokenException;
+import com.example.ecommerce_rest_api.common.exception.TokenException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;

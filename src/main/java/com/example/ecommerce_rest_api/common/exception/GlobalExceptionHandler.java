@@ -1,7 +1,7 @@
-package com.example.ecommerce_rest_api.exception;
+package com.example.ecommerce_rest_api.common.exception;
 
-import com.example.ecommerce_rest_api.payload.ErrorDetail;
-import com.example.ecommerce_rest_api.response.ApiResponse;
+import com.example.ecommerce_rest_api.common.DTOs.ErrorDetailDTO;
+import com.example.ecommerce_rest_api.common.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -43,17 +43,17 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDetail> handleGlobalException (Exception exception,
-                                                               WebRequest webRequest
+    public ResponseEntity<ErrorDetailDTO> handleGlobalException (Exception exception,
+                                                                 WebRequest webRequest
     ){
-        ErrorDetail errorDetail = new ErrorDetail(
+        ErrorDetailDTO errorDetailDTO = new ErrorDetailDTO(
                 LocalDateTime.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.BAD_REQUEST,
                 exception.getMessage(),
                 webRequest.getDescription(false)
         );
 
-        return new ResponseEntity<>(errorDetail,HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorDetailDTO,HttpStatus.BAD_REQUEST);
     }
 
 }
