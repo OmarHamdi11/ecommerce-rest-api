@@ -1,5 +1,7 @@
 package com.example.ecommerce_rest_api.auth.controller;
 
+import com.example.ecommerce_rest_api.auth.DTO.LoginDTO;
+import com.example.ecommerce_rest_api.auth.DTO.LoginResponse;
 import com.example.ecommerce_rest_api.auth.DTO.RegisterDTO;
 import com.example.ecommerce_rest_api.auth.service.AuthService;
 import com.example.ecommerce_rest_api.common.response.ApiResponse;
@@ -32,4 +34,15 @@ public class AuthController {
                 .status(HttpStatus.CREATED)
                 .body(ApiResponse.success(response,null));
     }
+
+    @PostMapping(value = {"/login","signin"})
+    public ResponseEntity<ApiResponse<LoginResponse>> login(
+            @Valid @RequestBody LoginDTO loginDTO
+    ){
+        LoginResponse response = authService.login(loginDTO);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success("Logged in Successfully",response));
+    }
+
 }

@@ -1,10 +1,17 @@
 package com.example.ecommerce_rest_api.auth.service;
 
+import com.example.ecommerce_rest_api.auth.DTO.LoginDTO;
+import com.example.ecommerce_rest_api.auth.DTO.LoginResponse;
 import com.example.ecommerce_rest_api.auth.DTO.RegisterDTO;
+import com.example.ecommerce_rest_api.security.JwtTokenProvider;
 import com.example.ecommerce_rest_api.user.entity.User;
 import com.example.ecommerce_rest_api.user.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +21,21 @@ import java.time.LocalDateTime;
 public class AuthServiceImpl implements AuthService{
 
     private final UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
     @Autowired
     public AuthServiceImpl(UserRepository userRepository,
+                           AuthenticationManager authenticationManager,
+                           JwtTokenProvider jwtTokenProvider,
                            PasswordEncoder passwordEncoder,
                            ModelMapper modelMapper
     ) {
         this.userRepository = userRepository;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
     }
@@ -55,6 +68,26 @@ public class AuthServiceImpl implements AuthService{
         userRepository.save(user);
 
         return "User registered successfully";
+    }
+
+    @Override
+    public LoginResponse login(LoginDTO loginDTO) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                loginDTO.getUsername(),loginDTO.getPassword()
+        ));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String token = jwtTokenProvider.generateToken(authentication);
+        User user = userRepository.findByUsername(loginDTO.getUsername()).orElseThrow(
+                () -> new RuntimeException("User not found")
+        );
+
+        LoginResponse response = new LoginResponse();
+        response.setAccessToken(token);
+        response.setUsername(user.getUsername());
+        response.setRole(user.getRole());
+
+        return response;
     }
 
 
