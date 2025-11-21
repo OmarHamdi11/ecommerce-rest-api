@@ -1,11 +1,11 @@
 package com.example.ecommerce_rest_api.auth.service;
 
 import com.example.ecommerce_rest_api.auth.DTO.RegisterDTO;
-import com.example.ecommerce_rest_api.auth.DTO.LoginResponse;
 import com.example.ecommerce_rest_api.user.entity.User;
 import com.example.ecommerce_rest_api.user.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,11 +14,16 @@ import java.time.LocalDateTime;
 public class AuthServiceImpl implements AuthService{
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+    public AuthServiceImpl(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
+                           ModelMapper modelMapper
+    ) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
     }
 
@@ -42,7 +47,7 @@ public class AuthServiceImpl implements AuthService{
         User user = new User();
         user.setUsername(registerDTO.getUsername());
         user.setEmail(registerDTO.getEmail());
-        user.setPassword(registerDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
         user.setRole(registerDTO.getRole());
         user.setGender(registerDTO.getGender());
         user.setCreatedAt(LocalDateTime.now());
