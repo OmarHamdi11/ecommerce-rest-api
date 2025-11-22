@@ -1,7 +1,7 @@
 package com.example.ecommerce_rest_api.security;
 
-import com.example.ecommerce_rest_api.user.entity.User;
-import com.example.ecommerce_rest_api.user.repository.UserRepository;
+import com.example.ecommerce_rest_api.features.user.entity.User;
+import com.example.ecommerce_rest_api.features.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
