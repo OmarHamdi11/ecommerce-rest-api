@@ -1,11 +1,11 @@
-package com.example.ecommerce_rest_api.auth.service;
+package com.example.ecommerce_rest_api.features.auth.service;
 
-import com.example.ecommerce_rest_api.auth.DTO.LoginDTO;
-import com.example.ecommerce_rest_api.auth.DTO.LoginResponse;
-import com.example.ecommerce_rest_api.auth.DTO.RegisterDTO;
+import com.example.ecommerce_rest_api.features.auth.DTO.LoginDTO;
+import com.example.ecommerce_rest_api.features.auth.DTO.LoginResponse;
+import com.example.ecommerce_rest_api.features.auth.DTO.RegisterDTO;
 import com.example.ecommerce_rest_api.security.JwtTokenProvider;
-import com.example.ecommerce_rest_api.user.entity.User;
-import com.example.ecommerce_rest_api.user.repository.UserRepository;
+import com.example.ecommerce_rest_api.features.user.entity.User;
+import com.example.ecommerce_rest_api.features.user.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

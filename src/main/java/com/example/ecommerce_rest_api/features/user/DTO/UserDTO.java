@@ -1,7 +1,7 @@
-package com.example.ecommerce_rest_api.user.DTO;
+package com.example.ecommerce_rest_api.features.user.DTO;
 
-import com.example.ecommerce_rest_api.user.ENUM.Gender;
-import com.example.ecommerce_rest_api.user.ENUM.Role;
+import com.example.ecommerce_rest_api.features.user.ENUM.Gender;
+import com.example.ecommerce_rest_api.features.user.ENUM.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

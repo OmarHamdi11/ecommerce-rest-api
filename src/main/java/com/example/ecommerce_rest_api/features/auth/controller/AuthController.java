@@ -1,9 +1,9 @@
-package com.example.ecommerce_rest_api.auth.controller;
+package com.example.ecommerce_rest_api.features.auth.controller;
 
-import com.example.ecommerce_rest_api.auth.DTO.LoginDTO;
-import com.example.ecommerce_rest_api.auth.DTO.LoginResponse;
-import com.example.ecommerce_rest_api.auth.DTO.RegisterDTO;
-import com.example.ecommerce_rest_api.auth.service.AuthService;
+import com.example.ecommerce_rest_api.features.auth.DTO.LoginDTO;
+import com.example.ecommerce_rest_api.features.auth.DTO.LoginResponse;
+import com.example.ecommerce_rest_api.features.auth.DTO.RegisterDTO;
+import com.example.ecommerce_rest_api.features.auth.service.AuthService;
 import com.example.ecommerce_rest_api.common.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

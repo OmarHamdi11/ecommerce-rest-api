@@ -1,7 +1,7 @@
-package com.example.ecommerce_rest_api.user.entity;
+package com.example.ecommerce_rest_api.features.user.entity;
 
-import com.example.ecommerce_rest_api.user.ENUM.Gender;
-import com.example.ecommerce_rest_api.user.ENUM.Role;
+import com.example.ecommerce_rest_api.features.user.ENUM.Gender;
+import com.example.ecommerce_rest_api.features.user.ENUM.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -37,9 +38,11 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    private String image_url;
+
     private String fullName;
 
-    private String phone;
+    private String phone_number;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -54,6 +57,8 @@ public class User {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    @OneToMany(mappedBy = "user")
+    private List<Address> addresses;
 
 }
 

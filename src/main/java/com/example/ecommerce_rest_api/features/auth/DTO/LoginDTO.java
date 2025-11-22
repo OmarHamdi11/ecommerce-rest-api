@@ -1,4 +1,4 @@
-package com.example.ecommerce_rest_api.auth.DTO;
+package com.example.ecommerce_rest_api.features.auth.DTO;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

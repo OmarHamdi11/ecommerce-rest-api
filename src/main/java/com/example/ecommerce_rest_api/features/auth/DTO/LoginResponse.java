@@ -1,6 +1,6 @@
-package com.example.ecommerce_rest_api.auth.DTO;
+package com.example.ecommerce_rest_api.features.auth.DTO;
 
-import com.example.ecommerce_rest_api.user.ENUM.Role;
+import com.example.ecommerce_rest_api.features.user.ENUM.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
-package com.example.ecommerce_rest_api.user.repository;
+package com.example.ecommerce_rest_api.features.user.repository;
 
-import com.example.ecommerce_rest_api.user.entity.User;
+import com.example.ecommerce_rest_api.features.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
