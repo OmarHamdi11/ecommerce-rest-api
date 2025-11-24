@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
         user.setProfileImageId(uploadResponse.getData().getId());
 
         User updatedUser = userRepository.save(user);
-        return mapToDTO(user);
+        return mapToDTO(updatedUser);
     }
 
     private UserDTO mapToDTO(User user){
