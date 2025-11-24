@@ -19,7 +19,7 @@ public class UserDTO {
     private String email;
     private String fullName;
     private String phone;
-    private String profileImageURL;
+    private String profileImageUrl;
     private Role role;
     private Gender gender;
     private LocalDateTime createdAt;

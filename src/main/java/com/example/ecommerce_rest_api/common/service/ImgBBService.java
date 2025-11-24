@@ -73,8 +73,6 @@ public class ImgBBService {
                     String.class
             );
 
-            System.out.println("ImgBB response: " + response);
-
             // convert response to object
             ImgBBUploadResponse uploadResponse = objectMapper.readValue(
                     response.getBody(),
@@ -82,13 +80,13 @@ public class ImgBBService {
             );
 
             if (!uploadResponse.isSuccess()) {
-                throw new RuntimeException("failed to upload image on ImgBB");
+                throw new RuntimeException("Failed to upload image on ImgBB");
             }
 
             return uploadResponse;
 
         } catch (IOException e) {
-            throw new RuntimeException("Error on image uploading: " + e.getMessage());
+            throw new RuntimeException("Failed to upload image: " + e.getMessage());
         }
     }
 
