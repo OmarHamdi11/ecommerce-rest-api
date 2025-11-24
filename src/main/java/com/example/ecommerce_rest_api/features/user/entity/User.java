@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +39,13 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private String image_url;
+    @Column(length = 500)
+    private String profileImageUrl;
+
+    @Column(length = 500)
+    private String profileImageDeleteUrl;
+
+    private String profileImageId;
 
     private String fullName;
 
@@ -54,6 +61,7 @@ public class User {
     @Column(nullable = false)
     private Gender gender;
 
+    @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
