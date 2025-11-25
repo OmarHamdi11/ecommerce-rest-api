@@ -23,4 +23,5 @@ public class UserDTO {
     private Role role;
     private Gender gender;
     private LocalDateTime createdAt;
+    private AddressDTO addressDTO;
 }

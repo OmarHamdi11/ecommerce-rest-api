@@ -1,6 +1,7 @@
 package com.example.ecommerce_rest_api.features.user.controller;
 
 import com.example.ecommerce_rest_api.common.response.ApiResponse;
+import com.example.ecommerce_rest_api.features.user.DTO.AddressDTO;
 import com.example.ecommerce_rest_api.features.user.DTO.UserDTO;
 import com.example.ecommerce_rest_api.features.user.DTO.UserUpdateRequest;
 import com.example.ecommerce_rest_api.features.user.service.UserService;
@@ -70,6 +71,19 @@ public class UserController {
                         "Profile image updated successfully",
                         Map.of("profileImageUrl",response.getProfileImageUrl())
                 ));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/address")
+    public ResponseEntity<ApiResponse<AddressDTO>> addAddress(
+            @RequestBody AddressDTO addressDTO
+    ){
+        Long userId = securityUtils.getCurrentUserId();
+        AddressDTO response = userService.addAddress(userId,addressDTO);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success("Address added successfully",response));
     }
 
 }
