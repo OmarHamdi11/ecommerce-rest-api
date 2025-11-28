@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -84,6 +85,44 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponse.success("Address added successfully",response));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/address")
+    public ResponseEntity<ApiResponse<List<AddressDTO>>> getUserAddresses(){
+        Long userId = securityUtils.getCurrentUserId();
+        List<AddressDTO> response = userService.getAddressByUserId(userId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success("Address retrieved successfully",response));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping("/address/{addressId}")
+    public ResponseEntity<ApiResponse<AddressDTO>> updateAddress(
+            @PathVariable(name = "addressId") Long addressId,
+            @RequestBody AddressDTO addressDTO
+    ){
+        Long userId = securityUtils.getCurrentUserId();
+        AddressDTO response = userService.updateAddress(userId,addressId,addressDTO);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success("Address updated successfully",response));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/address/{addressId}")
+    public ResponseEntity<ApiResponse<String>> deleteAddress(
+            @PathVariable(name = "addressId") Long addressId
+    ){
+        Long userId = securityUtils.getCurrentUserId();
+        String response = userService.deleteAddress(userId,addressId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success(response,null));
     }
 
 }

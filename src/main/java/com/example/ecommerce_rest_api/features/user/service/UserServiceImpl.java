@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -117,6 +118,55 @@ public class UserServiceImpl implements UserService {
         Address savedAddress = addressRepository.save(address);
 
         return mapToAddressDTO(savedAddress);
+    }
+
+    @Override
+    public List<AddressDTO> getAddressByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Address> addresses = addressRepository.findByUserId(userId);
+
+        return addresses.stream().map(this::mapToAddressDTO).toList();
+    }
+
+    @Override
+    public AddressDTO updateAddress(Long userId,Long addressId, AddressDTO addressDTO) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
+
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new ResourceNotFoundException("Address","id",addressId));
+
+        address.setTitle(addressDTO.getTitle());
+        address.setAddress_line_1(addressDTO.getAddress_line_1());
+        address.setAddress_line_2(addressDTO.getAddress_line_2());
+        address.setCountry(addressDTO.getCountry());
+        address.setCity(addressDTO.getCity());
+        address.setPostal_code(addressDTO.getPostal_code());
+        address.setLandmark(addressDTO.getLandmark());
+        address.setPhone_number(addressDTO.getPhone_number());
+
+        Address savedAddress = addressRepository.save(address);
+
+        return mapToAddressDTO(savedAddress);
+    }
+
+    @Override
+    public String deleteAddress(Long userId, Long addressId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
+
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new ResourceNotFoundException("Address","id",addressId));
+
+        if (!address.getUser().getId().equals(user.getId())){
+            return("You are not allowed to delete this address");
+        }
+
+        addressRepository.deleteById(addressId);
+
+        return "Address Deleted Successfully";
     }
 
     private UserDTO mapToDTO(User user){

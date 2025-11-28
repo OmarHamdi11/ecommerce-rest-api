@@ -1,13 +1,11 @@
 package com.example.ecommerce_rest_api.features.user.DTO;
 
 
-import com.example.ecommerce_rest_api.features.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
