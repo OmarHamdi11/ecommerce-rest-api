@@ -1,7 +1,7 @@
 package com.example.ecommerce_rest_api.common.exception;
 
 import com.example.ecommerce_rest_api.common.DTOs.ErrorDetailDTO;
-import com.example.ecommerce_rest_api.common.response.ApiResponse;
+import com.example.ecommerce_rest_api.common.response.ResponseApi;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(TokenException.class)
-    public ResponseEntity<ApiResponse<Object>> handleTokenException(TokenException exception,
+    public ResponseEntity<ResponseApi<Object>> handleTokenException(TokenException exception,
                                                                     WebRequest request
     ) {
-        ApiResponse<Object> response = ApiResponse.error(
+        ResponseApi<Object> response = ResponseApi.error(
                 HttpStatus.BAD_REQUEST.value(),
                 "An error occurred: " + exception.getMessage()
         );
@@ -29,10 +29,10 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiResponse<Object>> handleResourceNotFoundException(
+    public ResponseEntity<ResponseApi<Object>> handleResourceNotFoundException(
             ResourceNotFoundException exception, WebRequest request
     ){
-        ApiResponse<Object> response = ApiResponse.error(
+        ResponseApi<Object> response = ResponseApi.error(
                 HttpStatus.NOT_FOUND.value(),
                 "An error occurred: " + exception.getMessage()
         );

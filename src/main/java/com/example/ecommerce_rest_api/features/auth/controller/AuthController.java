@@ -4,7 +4,11 @@ import com.example.ecommerce_rest_api.features.auth.DTO.LoginDTO;
 import com.example.ecommerce_rest_api.features.auth.DTO.LoginResponse;
 import com.example.ecommerce_rest_api.features.auth.DTO.RegisterDTO;
 import com.example.ecommerce_rest_api.features.auth.service.AuthService;
-import com.example.ecommerce_rest_api.common.response.ApiResponse;
+import com.example.ecommerce_rest_api.common.response.ResponseApi;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/auth")
+@Tag(name = "Authentication", description = "APIs for user authentication and registration")
 public class AuthController {
 
     private final AuthService authService;
@@ -25,24 +30,43 @@ public class AuthController {
         this.authService = authService;
     }
 
+    //Build Register REST API
+    @Operation(
+            summary = "User registration",
+            description = "Registers a new user account with username, email, and password. Creates user with default USER role."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User registered successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid registration data or user already exists")
+    })
     @PostMapping(value = {"/register","signup"})
-    public ResponseEntity<ApiResponse<String>> register(
+    public ResponseEntity<ResponseApi<String>> register(
             @Valid @RequestBody RegisterDTO registerDTO
     ){
         String response = authService.register(registerDTO);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(ApiResponse.success(response,null));
+                .body(ResponseApi.success(response,null));
     }
 
+    //Build Login REST API
+    @Operation(
+            summary = "User login",
+            description = "Authenticates a user with username/email and password, returns JWT access token upon successful authentication"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login successful, JWT token returned"),
+            @ApiResponse(responseCode = "400", description = "Invalid login credentials provided"),
+            @ApiResponse(responseCode = "401", description = "Authentication failed - Invalid username or password")
+    })
     @PostMapping(value = {"/login","signin"})
-    public ResponseEntity<ApiResponse<LoginResponse>> login(
+    public ResponseEntity<ResponseApi<LoginResponse>> login(
             @Valid @RequestBody LoginDTO loginDTO
     ){
         LoginResponse response = authService.login(loginDTO);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ApiResponse.success("Logged in Successfully",response));
+                .body(ResponseApi.success("Logged in Successfully",response));
     }
 
 }

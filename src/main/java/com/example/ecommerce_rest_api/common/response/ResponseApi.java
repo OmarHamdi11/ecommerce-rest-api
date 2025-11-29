@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResponse<T>{
+public class ResponseApi<T>{
 
     private boolean success;
     private int status;
@@ -22,7 +22,7 @@ public class ApiResponse<T>{
     private T data;
     private String path;
 
-    public ApiResponse(int status, String message, T data) {
+    public ResponseApi(int status, String message, T data) {
         this.success = status >= 200 && status < 300;
         this.status = status;
         this.message = message;
@@ -30,23 +30,23 @@ public class ApiResponse<T>{
         this.data = data;
     }
 
-    public ApiResponse(int status, String message) {
+    public ResponseApi(int status, String message) {
         this.success = false;
         this.status = status;
         this.message = message;
         this.timestamp = LocalDateTime.now();
     }
 
-    public static <T> ApiResponse<T> success(String message, T data) {
-        return new ApiResponse<>(200, message, data);
+    public static <T> ResponseApi<T> success(String message, T data) {
+        return new ResponseApi<>(200, message, data);
     }
 
-    public static <T> ApiResponse<T> created(String message, T data) {
-        return new ApiResponse<>(201, message, data);
+    public static <T> ResponseApi<T> created(String message, T data) {
+        return new ResponseApi<>(201, message, data);
     }
 
-    public static <T> ApiResponse<T> error(int status, String message) {
-        return new ApiResponse<>(status, message);
+    public static <T> ResponseApi<T> error(int status, String message) {
+        return new ResponseApi<>(status, message);
     }
 
 }
