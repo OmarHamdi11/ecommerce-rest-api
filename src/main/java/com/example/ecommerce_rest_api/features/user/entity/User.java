@@ -1,5 +1,6 @@
 package com.example.ecommerce_rest_api.features.user.entity;
 
+import com.example.ecommerce_rest_api.features.review.entity.Review;
 import com.example.ecommerce_rest_api.features.user.ENUM.Gender;
 import com.example.ecommerce_rest_api.features.user.ENUM.Role;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -65,8 +67,10 @@ public class User {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
 }
 
