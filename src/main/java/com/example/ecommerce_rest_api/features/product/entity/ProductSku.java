@@ -8,7 +8,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +34,14 @@ public class ProductSku {
     @Column(nullable = false,unique = true,length = 100)
     private String sku;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    @Column(nullable = false)
+    private Double price;
 
-    @Column(name = "compare_at_price", precision = 10, scale = 2)
-    private BigDecimal compareAtPrice;
+    @Column(name = "compare_at_price")
+    private Double compareAtPrice;
 
-    @Column(name = "cost_price", precision = 10, scale = 2)
-    private BigDecimal costPrice;
+    @Column(name = "cost_price")
+    private Double costPrice;
 
     @Column(nullable = false)
     private Integer quantity;
@@ -50,8 +49,8 @@ public class ProductSku {
     @Column(name = "low_stock_threshold")
     private Integer lowStockThreshold = 10;
 
-    @Column(precision = 8, scale = 2)
-    private BigDecimal weight;
+    @Column
+    private Double weight;
 
     @Column(name = "is_active")
     private Boolean isActive = true;
@@ -87,10 +86,10 @@ public class ProductSku {
         return quantity <= 0;
     }
 
-//    public Double getDiscountPercentage(){
-//        if (compareAtPrice != null && compareAtPrice > price){
-//            return ((compareAtPrice - price)/ compareAtPrice) * 100 ;
-//        }
-//        return  0.0;
-//    }
+    public Double getDiscountPercentage(){
+        if (compareAtPrice != null && compareAtPrice > price){
+            return ((compareAtPrice - price)/ compareAtPrice) * 100 ;
+        }
+        return  0.0;
+    }
 }

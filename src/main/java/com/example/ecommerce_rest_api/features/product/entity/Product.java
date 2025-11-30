@@ -107,21 +107,21 @@ public class Product {
         sku.setProduct(null);
     }
 
-//    public Double getMinPrice() {
-//        return skus.stream()
-//                .filter(sku -> sku.getIsActive() && sku.getDeletedAt() == null)
-//                .map(ProductSku::getPrice)
-//                .min(Double::compareTo)
-//                .orElse(0.0);
-//    }
-//
-//    public Double getMaxPrice() {
-//        return skus.stream()
-//                .filter(sku -> sku.getIsActive() && sku.getDeletedAt() == null)
-//                .map(ProductSku::getPrice)
-//                .max(Double::compareTo)
-//                .orElse(0.0);
-//    }
+    public Double getMinPrice() {
+        return skus.stream()
+                .filter(sku -> sku.getIsActive() && sku.getDeletedAt() == null)
+                .map(ProductSku::getPrice)
+                .min(Double::compareTo)
+                .orElse(0.0);
+    }
+
+    public Double getMaxPrice() {
+        return skus.stream()
+                .filter(sku -> sku.getIsActive() && sku.getDeletedAt() == null)
+                .map(ProductSku::getPrice)
+                .max(Double::compareTo)
+                .orElse(0.0);
+    }
 
     public Integer getTotalStock() {
         return skus.stream()
