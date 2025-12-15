@@ -25,7 +25,7 @@ public class Category {
 
     private String name;
     private String description;
-    private LocalDateTime creates_at;
+    private LocalDateTime created_at;
     private LocalDateTime deleted_at;
 
     @OneToMany(mappedBy = "category")
