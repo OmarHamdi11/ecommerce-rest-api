@@ -1,14 +1,12 @@
 package com.example.ecommerce_rest_api.features.product.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,7 +26,9 @@ public class ProductDTO {
     private Double maxPrice;
     private Integer totalStock;
     private Double averageRating;
+    private Integer reviewCount;
     private LocalDateTime createdAt;
+    private List<String> categoryNames;
     private List<ProductImageDTO> images = new ArrayList<>();
     private List<ProductSkuDTO> skus = new ArrayList<>();
 }

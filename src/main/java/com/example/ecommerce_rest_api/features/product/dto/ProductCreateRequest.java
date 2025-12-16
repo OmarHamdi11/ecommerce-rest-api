@@ -25,14 +25,14 @@ public class ProductCreateRequest {
     @Size(min = 10, message = "Product description must be at least 10 characters")
     private String description;
 
-    @Size(min = 500, message = "Product summery must not exceed 500 character5")
+    @Size(max = 500, message = "Product summery must not exceed 500 characters")
     private String summary;
 
-    @Size(min = 100, message = "Product brand must not exceed 100 character5")
+    @Size(max = 100, message = "Product brand must not exceed 100 characters")
     private String brand;
 
-    private boolean isActive=true;
-    private boolean isFeatured=false;
+    private Boolean isActive=true;
+    private Boolean isFeatured=false;
 
     @NotEmpty(message = "At least one category is required")
     private List<Long> subCategoryIds;
