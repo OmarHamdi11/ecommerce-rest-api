@@ -50,7 +50,7 @@ public class ProductMapper {
         return productDTO;
     }
 
-    private ProductImageDTO mapToImageDTO(ProductImage productImage){
+    public ProductImageDTO mapToImageDTO(ProductImage productImage){
         return modelMapper.map(productImage, ProductImageDTO.class);
     }
 

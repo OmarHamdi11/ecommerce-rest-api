@@ -1,14 +1,14 @@
 package com.example.ecommerce_rest_api.features.product.service;
 
 import com.example.ecommerce_rest_api.common.response.PageResponse;
-import com.example.ecommerce_rest_api.features.product.dto.ProductCreateRequest;
-import com.example.ecommerce_rest_api.features.product.dto.ProductDTO;
-import com.example.ecommerce_rest_api.features.product.dto.ProductSearchRequest;
-import com.example.ecommerce_rest_api.features.product.dto.ProductUpdateRequest;
+import com.example.ecommerce_rest_api.features.product.dto.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public interface ProductService {
 
+    // Product CRUD
     ProductDTO createProduct(ProductCreateRequest request, MultipartFile coverImage);
     ProductDTO updateProduct(Long productId, ProductUpdateRequest request);
     ProductDTO getProductById(Long productId);
@@ -17,4 +17,10 @@ public interface ProductService {
     PageResponse<ProductDTO> searchProducts(ProductSearchRequest request,int pageNo, int pageSize);
     void deleteProduct(Long productId);
     void softDeleteProduct(Long productId);
+
+    // Product Images
+    ProductImageDTO addProductImage(Long productId, MultipartFile image);
+    List<ProductImageDTO> addProductImages(Long productId, List<MultipartFile> images);
+    void setPrimaryImage(Long productId, Long imageId);
+    void deleteImage(Long imageId);
 }

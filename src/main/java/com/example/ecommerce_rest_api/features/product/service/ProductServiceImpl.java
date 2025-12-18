@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -235,6 +236,84 @@ public class ProductServiceImpl implements ProductService{
         );
         product.setDeletedAt(LocalDateTime.now());
         productRepository.save(product);
+    }
+
+    @Override
+    @Transactional
+    public ProductImageDTO addProductImage(Long productId, MultipartFile image) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new ResourceNotFoundException("Product", "id", productId)
+        );
+
+        ImgBBUploadResponse uploadResponse = imgBBService.uploadImage(image);
+
+        int displayOrder = product.getImages().stream()
+                .mapToInt(ProductImage::getDisplayOrder)
+                .max()
+                .orElse(0) + 1;
+
+        ProductImage productImage = ProductImage.builder()
+                .imageUrl(uploadResponse.getData().getDisplay_url())
+                .imageDeleteUrl(uploadResponse.getData().getDelete_url())
+                .imageId(uploadResponse.getData().getId())
+                .displayOrder(displayOrder)
+                .isPrimary(product.getImages().isEmpty())
+                .product(product)
+                .build();
+
+        ProductImage savedImage = productImageRepository.save(productImage);
+
+        return productMapper.mapToImageDTO(savedImage);
+    }
+
+    @Override
+    @Transactional
+    public List<ProductImageDTO> addProductImages(Long productId, List<MultipartFile> images) {
+        List<ProductImageDTO> result = new ArrayList<>();
+        for (MultipartFile image : images){
+            result.add(addProductImage(productId,image));
+        }
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public void setPrimaryImage(Long productId, Long imageId) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new ResourceNotFoundException("Product", "id", productId)
+        );
+
+        product.getImages().forEach(img -> img.setIsPrimary(false));
+
+        ProductImage newPrimary = productImageRepository.findById(imageId).orElseThrow(
+                () -> new ResourceNotFoundException("ProductImage", "id", imageId)
+        );
+
+        if (!newPrimary.getProduct().getId().equals(product.getId())){
+            throw new RuntimeException("Image does not belong to this product");
+        }
+
+        newPrimary.setIsPrimary(true);
+        productImageRepository.save(newPrimary);
+    }
+
+    @Override
+    public void deleteImage(Long imageId) {
+        ProductImage image = productImageRepository.findById(imageId).orElseThrow(
+                () -> new ResourceNotFoundException("ProductImage", "id", imageId)
+        );
+
+        productImageRepository.delete(image);
+
+        if (image.getIsPrimary()){
+            List<ProductImage> images =
+                    productImageRepository.findByProductIdOrderByDisplayOrderAsc(image.getProduct().getId());
+            if (!images.isEmpty()){
+                images.getFirst().setIsPrimary(true);
+                productImageRepository.save(images.getFirst());
+            }
+        }
+
     }
 
     // =============== Helper Methods ===============
