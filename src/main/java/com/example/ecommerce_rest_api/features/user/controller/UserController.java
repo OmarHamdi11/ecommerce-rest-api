@@ -6,6 +6,7 @@ import com.example.ecommerce_rest_api.features.user.DTO.UserDTO;
 import com.example.ecommerce_rest_api.features.user.DTO.UserUpdateRequest;
 import com.example.ecommerce_rest_api.features.user.service.UserService;
 import com.example.ecommerce_rest_api.utils.SecurityUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/user")
 @CrossOrigin(origins = "*")
+@Tag(name = "User Management", description = "APIs for managing Users")
 public class UserController {
 
     private final UserService userService;
