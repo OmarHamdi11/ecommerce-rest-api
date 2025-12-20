@@ -6,6 +6,7 @@ import com.example.ecommerce_rest_api.features.product.dto.ProductSkuDTO;
 import com.example.ecommerce_rest_api.features.product.dto.ProductSkuUpdateRequest;
 import com.example.ecommerce_rest_api.features.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ public class ProductSkuController {
     }
 
     @Operation(summary = "Add product SKU", description = "Add new SKU to product. Admin only.")
+    @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{productId}/skus")
     public ResponseEntity<ResponseApi<ProductSkuDTO>> addProductSku(
@@ -40,6 +42,7 @@ public class ProductSkuController {
     }
 
     @Operation(summary = "Update product SKU", description = "Update SKU details. Admin only.")
+    @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/skus/{skuId}")
     public ResponseEntity<ResponseApi<ProductSkuDTO>> updateProductSku(
@@ -71,6 +74,7 @@ public class ProductSkuController {
     }
 
     @Operation(summary = "Delete SKU", description = "Soft delete SKU. Admin only.")
+    @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/skus/{skuId}")
     public ResponseEntity<ResponseApi<String>> deleteProductSku(@PathVariable Long skuId) {

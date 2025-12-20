@@ -8,6 +8,7 @@ import com.example.ecommerce_rest_api.features.review.service.ReviewService;
 import com.example.ecommerce_rest_api.utils.AppConstants;
 import com.example.ecommerce_rest_api.utils.SecurityUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,7 @@ public class ReviewController {
     }
 
     @Operation(summary = "Add review", description = "Add review to product. Authenticated users only.")
+    @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/reviews")
     public ResponseEntity<ResponseApi<ReviewDTO>> addReview(
@@ -57,6 +59,7 @@ public class ReviewController {
     }
 
     @Operation(summary = "Approve review", description = "Approve product review. Admin only.")
+    @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/reviews/{reviewId}/approve")
     public ResponseEntity<ResponseApi<String>> approveReview(@PathVariable Long reviewId) {
@@ -67,6 +70,7 @@ public class ReviewController {
     }
 
     @Operation(summary = "Delete review", description = "Delete product review. Admin only.")
+    @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/reviews/{reviewId}")
     public ResponseEntity<ResponseApi<String>> deleteReview(@PathVariable Long reviewId) {

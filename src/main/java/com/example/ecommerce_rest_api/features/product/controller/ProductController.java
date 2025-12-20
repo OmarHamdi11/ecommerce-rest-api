@@ -8,6 +8,7 @@ import com.example.ecommerce_rest_api.utils.AppConstants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,7 @@ public class ProductController {
             @ApiResponse(responseCode = "400", description = "Invalid input data"),
             @ApiResponse(responseCode = "403", description = "Access denied")
     })
+    @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseApi<ProductDTO>> createProduct(
@@ -54,6 +56,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Update product", description = "Update product details. Admin only.")
+    @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ResponseApi<ProductDTO>> updateProduct(
@@ -132,6 +135,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Toggle featured status", description = "Toggle product featured status. Admin only.")
+    @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{productId}/featured")
         public ResponseEntity<ResponseApi<String>> toggleFeatured(@PathVariable Long productId) {
@@ -142,6 +146,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Toggle active status", description = "Toggle product active status. Admin only.")
+    @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{productId}/active")
     public ResponseEntity<ResponseApi<String>> toggleActive(@PathVariable Long productId) {
@@ -152,6 +157,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Soft delete product", description = "Soft delete product. Admin only.")
+    @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}/soft")
     public ResponseEntity<ResponseApi<String>> softDeleteProduct(
@@ -164,6 +170,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Delete product permanently", description = "Permanently delete product. Admin only.")
+    @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseApi<String>> deleteProduct(
@@ -181,148 +188,5 @@ public class ProductController {
         List<String> brands = productService.getAllBrands();
         return ResponseEntity.ok(ResponseApi.success("Brands retrieved", brands));
     }
-
-
-    // ============= PRODUCT IMAGES =============
-//
-//    @Operation(summary = "Add product image", description = "Add single image to product. Admin only.")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @PostMapping(value = "/{productId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<ResponseApi<ProductImageDTO>> addProductImage(
-//            @PathVariable("productId") Long productId,
-//            @RequestPart("image") MultipartFile image
-//    ){
-//        ProductImageDTO response = productService.addProductImage(productId,image);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(ResponseApi.success("Product image uploaded successfully",response));
-//    }
-//
-//    @Operation(summary = "Add multiple images", description = "Add multiple images to product. Admin only.")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @PostMapping(value = "/{productId}/images/bulk", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<ResponseApi<List<ProductImageDTO>>> addProductImages(
-//            @PathVariable("productId") Long productId,
-//            @RequestPart("images") List<MultipartFile> images
-//    ){
-//        List<ProductImageDTO> response = productService.addProductImages(productId,images);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(ResponseApi.success("Product images uploaded successfully",response));
-//    }
-//
-//    @Operation(summary = "Set primary image", description = "Set an image as primary. Admin only.")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @PatchMapping("/{productId}/images/{imageId}/primary")
-//    public ResponseEntity<ResponseApi<String>> setPrimaryImage(
-//            @PathVariable("productId") Long productId,
-//            @PathVariable("imageId") Long imageId
-//    ){
-//        productService.setPrimaryImage(productId,imageId);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(ResponseApi.success("Image set primary",null));
-//    }
-//
-//    @Operation(summary = "Delete product image", description = "Delete product image. Admin only.")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @DeleteMapping("/images/{imageId}")
-//    public ResponseEntity<ResponseApi<String>> deleteImage(
-//            @PathVariable("imageId") Long imageId
-//    ){
-//        productService.deleteImage(imageId);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(ResponseApi.success("Image deleted successfully",null));
-//    }
-//
-//
-//
-//    // ============= PRODUCT SKU =============
-//
-//    @Operation(summary = "Add product SKU", description = "Add new SKU to product. Admin only.")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @PostMapping("/{productId}/skus")
-//    public ResponseEntity<ResponseApi<ProductSkuDTO>> addProductSku(
-//            @PathVariable("productId") Long productId,
-//            @RequestBody ProductSkuCreateRequest request
-//    ){
-//        ProductSkuDTO response = productService.addProductSku(productId,request);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(ResponseApi.success("Sku added successfully",response));
-//    }
-//
-//    @Operation(summary = "Update product SKU", description = "Update SKU details. Admin only.")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @PutMapping("/skus/{skuId}")
-//    public ResponseEntity<ResponseApi<ProductSkuDTO>> updateProductSku(
-//            @PathVariable Long skuId,
-//            @Valid @RequestBody ProductSkuUpdateRequest request
-//    ) {
-//        ProductSkuDTO response = productService.updateProductSku(skuId, request);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(ResponseApi.success("Sku updated successfully",response));
-//    }
-//
-//    @Operation(summary = "Get SKU by ID", description = "Retrieve SKU details by ID")
-//    @GetMapping("/skus/{skuId}")
-//    public ResponseEntity<ResponseApi<ProductSkuDTO>> getSkuById(@PathVariable Long skuId) {
-//        ProductSkuDTO sku = productService.getSkuById(skuId);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(ResponseApi.success("SKU retrieved", sku));
-//    }
-//
-//    @Operation(summary = "Get product SKUs", description = "Get all SKUs for a product")
-//    @GetMapping("/{productId}/skus")
-//    public ResponseEntity<ResponseApi<List<ProductSkuDTO>>> getProductSkus(@PathVariable Long productId) {
-//        List<ProductSkuDTO> skus = productService.getProductSkus(productId);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(ResponseApi.success("SKUs retrieved", skus));
-//    }
-//
-//    @Operation(summary = "Delete SKU", description = "Soft delete SKU. Admin only.")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @DeleteMapping("/skus/{skuId}")
-//    public ResponseEntity<ResponseApi<String>> deleteProductSku(@PathVariable Long skuId) {
-//        productService.deleteProductSku(skuId);
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(ResponseApi.success("SKU deleted", null));
-//    }
-//
-//
-//    // ============= PRODUCT ATTRIBUTES =============
-//
-//    @Operation(summary = "Create attribute", description = "Create new product attribute. Admin only.")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @PostMapping("/attributes")
-//    public ResponseEntity<ResponseApi<ProductAttributeDTO>> createAttribute(
-//            @Valid @RequestBody ProductAttributeCreateRequest request
-//    ) {
-//        ProductAttributeDTO attribute = productService.createAttribute(request);
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .body(ResponseApi.created("Attribute created", attribute));
-//    }
-//
-//    @Operation(summary = "Get all attributes", description = "Get all product attributes")
-//    @GetMapping("/attributes")
-//    public ResponseEntity<ResponseApi<List<ProductAttributeDTO>>> getAllAttributes() {
-//        List<ProductAttributeDTO> attributes = productService.getAllAttributes();
-//        return ResponseEntity.ok(ResponseApi.success("Attributes retrieved", attributes));
-//    }
-//
-//    @Operation(summary = "Get attributes by type", description = "Get attributes filtered by type")
-//    @GetMapping("/attributes/type/{type}")
-//    public ResponseEntity<ResponseApi<List<ProductAttributeDTO>>> getAttributesByType(
-//            @PathVariable String type
-//    ) {
-//        List<ProductAttributeDTO> attributes = productService.getAttributesByType(type);
-//        return ResponseEntity.ok(ResponseApi.success("Attributes retrieved", attributes));
-//    }
 
 }

@@ -4,6 +4,7 @@ import com.example.ecommerce_rest_api.common.response.ResponseApi;
 import com.example.ecommerce_rest_api.features.product.dto.ProductImageDTO;
 import com.example.ecommerce_rest_api.features.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/products")
 @Tag(name = "Product Image Management", description = "APIs for managing product images")
+@SecurityRequirement(name = "Bearer Authentication")
 public class ProductImageController {
 
     private final ProductService productService;

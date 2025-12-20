@@ -5,6 +5,7 @@ import com.example.ecommerce_rest_api.features.product.dto.ProductAttributeCreat
 import com.example.ecommerce_rest_api.features.product.dto.ProductAttributeDTO;
 import com.example.ecommerce_rest_api.features.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ public class ProductAttributeController {
 
 
     @Operation(summary = "Create attribute", description = "Create new product attribute. Admin only.")
+    @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
     public ResponseEntity<ResponseApi<ProductAttributeDTO>> createAttribute(
