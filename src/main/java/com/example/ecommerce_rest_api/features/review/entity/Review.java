@@ -3,15 +3,13 @@ package com.example.ecommerce_rest_api.features.review.entity;
 import com.example.ecommerce_rest_api.features.product.entity.Product;
 import com.example.ecommerce_rest_api.features.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
