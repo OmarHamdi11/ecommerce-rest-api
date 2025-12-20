@@ -249,4 +249,35 @@ public class ProductController {
                 .body(ResponseApi.success("SKU deleted", null));
     }
 
+
+    // ============= PRODUCT ATTRIBUTES =============
+
+    @Operation(summary = "Create attribute", description = "Create new product attribute. Admin only.")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/attributes")
+    public ResponseEntity<ResponseApi<ProductAttributeDTO>> createAttribute(
+            @Valid @RequestBody ProductAttributeCreateRequest request
+    ) {
+        ProductAttributeDTO attribute = productService.createAttribute(request);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ResponseApi.created("Attribute created", attribute));
+    }
+
+    @Operation(summary = "Get all attributes", description = "Get all product attributes")
+    @GetMapping("/attributes")
+    public ResponseEntity<ResponseApi<List<ProductAttributeDTO>>> getAllAttributes() {
+        List<ProductAttributeDTO> attributes = productService.getAllAttributes();
+        return ResponseEntity.ok(ResponseApi.success("Attributes retrieved", attributes));
+    }
+
+    @Operation(summary = "Get attributes by type", description = "Get attributes filtered by type")
+    @GetMapping("/attributes/type/{type}")
+    public ResponseEntity<ResponseApi<List<ProductAttributeDTO>>> getAttributesByType(
+            @PathVariable String type
+    ) {
+        List<ProductAttributeDTO> attributes = productService.getAttributesByType(type);
+        return ResponseEntity.ok(ResponseApi.success("Attributes retrieved", attributes));
+    }
+
 }

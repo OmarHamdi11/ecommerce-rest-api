@@ -2,6 +2,7 @@ package com.example.ecommerce_rest_api.features.product.service;
 
 import com.example.ecommerce_rest_api.common.response.PageResponse;
 import com.example.ecommerce_rest_api.features.product.dto.*;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -31,4 +32,16 @@ public interface ProductService {
     ProductSkuDTO getSkuById(Long skuId);
     List<ProductSkuDTO> getProductSkus(Long productId);
 
+    // Product Attributes
+    ProductAttributeDTO createAttribute(ProductAttributeCreateRequest request);
+    List<ProductAttributeDTO> getAllAttributes();
+    List<ProductAttributeDTO> getAttributesByType(String type);
+
+    // Featured & Active
+    void toggleFeatured(Long productId);
+    void toggleActive(Long productId);
+    PageResponse<ProductDTO> getFeaturedProducts(Pageable pageable);
+
+    // Utility
+    List<String> getAllBrands();
 }

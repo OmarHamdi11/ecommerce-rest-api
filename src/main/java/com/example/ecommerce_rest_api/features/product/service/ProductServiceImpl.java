@@ -6,6 +6,7 @@ import com.example.ecommerce_rest_api.common.response.PageResponse;
 import com.example.ecommerce_rest_api.common.service.ImgBBService;
 import com.example.ecommerce_rest_api.features.category.entity.SubCategory;
 import com.example.ecommerce_rest_api.features.category.repository.SubCategoryRepository;
+import com.example.ecommerce_rest_api.features.product.ENUM.AttributeType;
 import com.example.ecommerce_rest_api.features.product.dto.*;
 import com.example.ecommerce_rest_api.features.product.entity.Product;
 import com.example.ecommerce_rest_api.features.product.entity.ProductAttribute;
@@ -27,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService{
@@ -390,6 +392,59 @@ public class ProductServiceImpl implements ProductService{
         );
         List<ProductSku> productSkuList = productSkuRepository.findByProductId(product.getId());
         return productSkuList.stream().map(productMapper::mapToSkuDTO).toList();
+    }
+
+    @Override
+    @Transactional
+    public ProductAttributeDTO createAttribute(ProductAttributeCreateRequest request) {
+        if (productAttributeRepository.existsByTypeAndValue(request.getType(), request.getValue())) {
+            throw new RuntimeException("Attribute already exists");
+        }
+
+        ProductAttribute attribute = ProductAttribute.builder()
+                .type(request.getType())
+                .value(request.getValue())
+                .displayValue(request.getDisplayValue())
+                .hexCode(request.getHexCode())
+                .build();
+
+        ProductAttribute saved = productAttributeRepository.save(attribute);
+        return productMapper.mapToAttributeDTO(saved);
+    }
+
+    @Override
+    public List<ProductAttributeDTO> getAllAttributes() {
+        return productAttributeRepository.findAll().stream()
+                .map(productMapper::mapToAttributeDTO)
+                .toList();
+    }
+
+    @Override
+    public List<ProductAttributeDTO> getAttributesByType(String type) {
+        AttributeType attributeType = AttributeType.valueOf(type.toUpperCase());
+        return productAttributeRepository.findByType(attributeType).stream()
+                .map(productMapper::mapToAttributeDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void toggleFeatured(Long productId) {
+
+    }
+
+    @Override
+    public void toggleActive(Long productId) {
+
+    }
+
+    @Override
+    public PageResponse<ProductDTO> getFeaturedProducts(Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public List<String> getAllBrands() {
+        return List.of();
     }
 
     // =============== Helper Methods ===============

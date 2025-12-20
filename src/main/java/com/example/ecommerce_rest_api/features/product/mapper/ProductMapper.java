@@ -68,7 +68,7 @@ public class ProductMapper {
         return productSkuDTO;
     }
 
-    private ProductAttributeDTO mapToAttributeDTO(ProductAttribute productAttribute){
+    public ProductAttributeDTO mapToAttributeDTO(ProductAttribute productAttribute){
         return modelMapper.map(productAttribute,ProductAttributeDTO.class);
     }
 }
