@@ -6,6 +6,7 @@ import com.example.ecommerce_rest_api.features.user.DTO.UserDTO;
 import com.example.ecommerce_rest_api.features.user.DTO.UserUpdateRequest;
 import com.example.ecommerce_rest_api.features.user.service.UserService;
 import com.example.ecommerce_rest_api.utils.SecurityUtils;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -37,7 +38,11 @@ public class UserController {
         this.securityUtils = securityUtils;
     }
 
-
+    @Operation(
+            summary = "Get current user profile",
+            description = "Retrieves the authenticated user's profile information including personal details and profile image. " +
+                    "The user ID is automatically extracted from the JWT token."
+    )
     @PreAuthorize("hasRole('USER')")
     @GetMapping
     public ResponseEntity<ResponseApi<UserDTO>> getUserById() {
@@ -50,6 +55,12 @@ public class UserController {
 
     }
 
+    @Operation(
+            summary = "Update user profile",
+            description = "Updates the authenticated user's profile information. " +
+                    "Can update username, email, password, full name, phone, role, gender, and optionally profile image. " +
+                    "Requires multipart/form-data with 'data' (JSON) and optional 'profileImage' (file)."
+    )
     @PreAuthorize("hasRole('USER')")
     @PostMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseApi<UserDTO>> updateUser(
@@ -64,6 +75,12 @@ public class UserController {
                 .body(ResponseApi.success("User updated successfully",response));
     }
 
+    @Operation(
+            summary = "Update profile image",
+            description = "Updates only the user's profile image. " +
+                    "Accepts image files (JPG, PNG, GIF, WebP) up to 5MB. " +
+                    "Old image will be replaced with the new one."
+    )
     @PreAuthorize("hasRole('USER')")
     @PutMapping(value = "/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseApi<Map<String,String>>> updateProfileImage(
@@ -79,6 +96,12 @@ public class UserController {
                 ));
     }
 
+    @Operation(
+            summary = "Add new address",
+            description = "Creates a new delivery/billing address for the authenticated user. " +
+                    "Users can have multiple addresses. " +
+                    "Address includes title, address lines, country, city, postal code, landmark, and phone number."
+    )
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/address")
     public ResponseEntity<ResponseApi<AddressDTO>> addAddress(
@@ -92,6 +115,11 @@ public class UserController {
                 .body(ResponseApi.success("Address added successfully",response));
     }
 
+    @Operation(
+            summary = "Get all user addresses",
+            description = "Retrieves all saved addresses for the authenticated user. " +
+                    "Returns a list of addresses including delivery and billing addresses."
+    )
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/address")
     public ResponseEntity<ResponseApi<List<AddressDTO>>> getUserAddresses(){
@@ -103,6 +131,12 @@ public class UserController {
                 .body(ResponseApi.success("Address retrieved successfully",response));
     }
 
+    @Operation(
+            summary = "Update address",
+            description = "Updates an existing address for the authenticated user. " +
+                    "User can only update their own addresses. " +
+                    "All address fields will be updated with the provided data."
+    )
     @PreAuthorize("hasRole('USER')")
     @PutMapping("/address/{addressId}")
     public ResponseEntity<ResponseApi<AddressDTO>> updateAddress(
@@ -117,6 +151,12 @@ public class UserController {
                 .body(ResponseApi.success("Address updated successfully",response));
     }
 
+    @Operation(
+            summary = "Delete address",
+            description = "Deletes a specific address for the authenticated user. " +
+                    "User can only delete their own addresses. " +
+                    "This action is permanent and cannot be undone."
+    )
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/address/{addressId}")
     public ResponseEntity<ResponseApi<String>> deleteAddress(
