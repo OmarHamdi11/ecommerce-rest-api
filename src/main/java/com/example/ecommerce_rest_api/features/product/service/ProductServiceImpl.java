@@ -428,26 +428,42 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    @Transactional
     public void toggleFeatured(Long productId) {
-
+        Product product = findProductById(productId);
+        product.setIsFeatured(!product.getIsFeatured());
+        productRepository.save(product);
     }
 
     @Override
+    @Transactional
     public void toggleActive(Long productId) {
-
+        Product product = findProductById(productId);
+        product.setIsActive(!product.getIsActive());
+        productRepository.save(product);
     }
 
     @Override
-    public PageResponse<ProductDTO> getFeaturedProducts(Pageable pageable) {
-        return null;
+    public PageResponse<ProductDTO> getFeaturedProducts(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(pageNo,pageSize, sort);
+        Page<Product> products = productRepository.findAllFeatured(pageable);
+        return new PageResponse<>(products.map(productMapper::toDTO));
     }
 
     @Override
     public List<String> getAllBrands() {
-        return List.of();
+        return productRepository.findAllBrands();
     }
 
     // =============== Helper Methods ===============
+    private Product findProductById(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+    }
+
     private String generateSlug(String name) {
         String baseSlug = name.toLowerCase()
                 .replaceAll("[^a-z0-9\\s-]", "")

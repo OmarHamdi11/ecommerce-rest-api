@@ -40,7 +40,7 @@ public interface ProductService {
     // Featured & Active
     void toggleFeatured(Long productId);
     void toggleActive(Long productId);
-    PageResponse<ProductDTO> getFeaturedProducts(Pageable pageable);
+    PageResponse<ProductDTO> getFeaturedProducts(int pageNo, int pageSize, String sortBy, String sortDir);
 
     // Utility
     List<String> getAllBrands();

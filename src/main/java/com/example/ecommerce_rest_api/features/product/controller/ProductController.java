@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -117,16 +119,38 @@ public class ProductController {
                 .body(ResponseApi.success("Search completed successfully",response));
     }
 
-    @Operation(summary = "Delete product permanently", description = "Permanently delete product. Admin only.")
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseApi<String>> deleteProduct(
-            @PathVariable("id") Long productId
-    ){
-        productService.deleteProduct(productId);
+    @Operation(summary = "Get featured products", description = "Retrieve featured products")
+    @GetMapping("/featured")
+    public ResponseEntity<ResponseApi<PageResponse<ProductDTO>>> getFeaturedProducts(
+            @RequestParam(value = "pageNo" , defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize" , defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ) {
+        PageResponse<ProductDTO> products = productService.getFeaturedProducts(pageNo,pageSize,sortBy,sortDir);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ResponseApi.success("Product deleted permanently",null));
+                .body(ResponseApi.success("Featured products retrieved", products));
+    }
+
+    @Operation(summary = "Toggle featured status", description = "Toggle product featured status. Admin only.")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{productId}/featured")
+        public ResponseEntity<ResponseApi<String>> toggleFeatured(@PathVariable Long productId) {
+        productService.toggleFeatured(productId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseApi.success("Featured status toggled", null));
+    }
+
+    @Operation(summary = "Toggle active status", description = "Toggle product active status. Admin only.")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{productId}/active")
+    public ResponseEntity<ResponseApi<String>> toggleActive(@PathVariable Long productId) {
+        productService.toggleActive(productId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseApi.success("Active status toggled", null));
     }
 
     @Operation(summary = "Soft delete product", description = "Soft delete product. Admin only.")
@@ -139,6 +163,25 @@ public class ProductController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ResponseApi.success("Product soft deleted",null));
+    }
+
+    @Operation(summary = "Delete product permanently", description = "Permanently delete product. Admin only.")
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseApi<String>> deleteProduct(
+            @PathVariable("id") Long productId
+    ){
+        productService.deleteProduct(productId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseApi.success("Product deleted permanently",null));
+    }
+
+    @Operation(summary = "Get all brands", description = "Get list of all product brands")
+    @GetMapping("/brands")
+    public ResponseEntity<ResponseApi<List<String>>> getAllBrands() {
+        List<String> brands = productService.getAllBrands();
+        return ResponseEntity.ok(ResponseApi.success("Brands retrieved", brands));
     }
 
 
