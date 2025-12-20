@@ -2,7 +2,6 @@ package com.example.ecommerce_rest_api.features.product.service;
 
 import com.example.ecommerce_rest_api.common.response.PageResponse;
 import com.example.ecommerce_rest_api.features.product.dto.*;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
