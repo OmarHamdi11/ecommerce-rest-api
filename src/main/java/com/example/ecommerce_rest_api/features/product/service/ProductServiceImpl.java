@@ -316,6 +316,82 @@ public class ProductServiceImpl implements ProductService{
 
     }
 
+    @Override
+    @Transactional
+    public ProductSkuDTO addProductSku(Long productId, ProductSkuCreateRequest request) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new ResourceNotFoundException("Product", "id", productId)
+        );
+
+        if (productSkuRepository.existsBySku(request.getSku())) {
+            throw new RuntimeException("SKU code already exists: " + request.getSku());
+        }
+
+        createSkuForProduct(product,request);
+
+        ProductSku sku = productSkuRepository.findBySku(request.getSku())
+                .orElseThrow(() -> new RuntimeException("Error creating SKU"));
+
+        return productMapper.mapToSkuDTO(sku);
+    }
+
+    @Override
+    @Transactional
+    public ProductSkuDTO updateProductSku(Long skuId, ProductSkuUpdateRequest request) {
+        ProductSku sku = productSkuRepository.findById(skuId).orElseThrow(
+                () -> new ResourceNotFoundException("SKU", "id", skuId)
+        );
+
+        if (request.getPrice() != null){
+            sku.setPrice(request.getPrice());
+        }
+        if (request.getCompareAtPrice() != null){
+            sku.setCompareAtPrice(request.getCompareAtPrice());
+        }
+        if (request.getQuantity() != null){
+            sku.setQuantity(request.getQuantity());
+        }
+        if (request.getIsActive() != null){
+            sku.setIsActive(request.getIsActive());
+        }
+        if (request.getAttributeIds() != null && !request.getAttributeIds().isEmpty()){
+            List<ProductAttribute> attributes = productAttributeRepository.findAllById(request.getAttributeIds());
+            sku.setAttributes(attributes);
+        }
+
+        ProductSku savedSku = productSkuRepository.save(sku);
+
+        return productMapper.mapToSkuDTO(savedSku);
+    }
+
+    @Override
+    @Transactional
+    public void deleteProductSku(Long skuId) {
+        ProductSku sku = productSkuRepository.findById(skuId).orElseThrow(
+                () -> new ResourceNotFoundException("SKU", "id", skuId)
+        );
+        sku.setIsActive(false);
+        sku.setDeletedAt(LocalDateTime.now());
+        productSkuRepository.save(sku);
+    }
+
+    @Override
+    public ProductSkuDTO getSkuById(Long skuId) {
+        ProductSku sku = productSkuRepository.findById(skuId).orElseThrow(
+                () -> new ResourceNotFoundException("SKU", "id", skuId)
+        );
+        return productMapper.mapToSkuDTO(sku);
+    }
+
+    @Override
+    public List<ProductSkuDTO> getProductSkus(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new ResourceNotFoundException("Product", "id", productId)
+        );
+        List<ProductSku> productSkuList = productSkuRepository.findByProductId(product.getId());
+        return productSkuList.stream().map(productMapper::mapToSkuDTO).toList();
+    }
+
     // =============== Helper Methods ===============
     private String generateSlug(String name) {
         String baseSlug = name.toLowerCase()
@@ -335,6 +411,30 @@ public class ProductServiceImpl implements ProductService{
     private void incrementViewCount(Product product){
         product.setViewCount(product.getViewCount() + 1);
         productRepository.save(product);
+    }
+
+
+    private void createSkuForProduct(Product product, ProductSkuCreateRequest request) {
+        // Get attributes
+        List<ProductAttribute> attributes = new ArrayList<>();
+        if (request.getAttributeIds() != null && !request.getAttributeIds().isEmpty()) {
+            attributes = productAttributeRepository.findAllById(request.getAttributeIds());
+        }
+
+        ProductSku sku = ProductSku.builder()
+                .sku(request.getSku())
+                .price(request.getPrice())
+                .compareAtPrice(request.getCompareAtPrice())
+                .costPrice(request.getCostPrice())
+                .quantity(request.getQuantity())
+                .lowStockThreshold(request.getLowStockThreshold())
+                .weight(request.getWeight())
+                .isActive(request.getIsActive())
+                .product(product)
+                .attributes(attributes)
+                .build();
+
+        productSkuRepository.save(sku);
     }
 
 

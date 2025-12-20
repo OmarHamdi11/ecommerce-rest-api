@@ -54,7 +54,7 @@ public class ProductMapper {
         return modelMapper.map(productImage, ProductImageDTO.class);
     }
 
-    private ProductSkuDTO mapToSkuDTO(ProductSku productSku){
+    public ProductSkuDTO mapToSkuDTO(ProductSku productSku){
         List<ProductAttributeDTO> attributes = productSku.getAttributes().stream()
                 .map(this::mapToAttributeDTO)
                 .toList();

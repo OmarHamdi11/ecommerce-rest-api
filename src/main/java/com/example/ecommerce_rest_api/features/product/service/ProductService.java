@@ -23,4 +23,12 @@ public interface ProductService {
     List<ProductImageDTO> addProductImages(Long productId, List<MultipartFile> images);
     void setPrimaryImage(Long productId, Long imageId);
     void deleteImage(Long imageId);
+
+    // Product SKU
+    ProductSkuDTO addProductSku(Long productId, ProductSkuCreateRequest request);
+    ProductSkuDTO updateProductSku(Long skuId, ProductSkuUpdateRequest request);
+    void deleteProductSku(Long skuId);
+    ProductSkuDTO getSkuById(Long skuId);
+    List<ProductSkuDTO> getProductSkus(Long productId);
+
 }
