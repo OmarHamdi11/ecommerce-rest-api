@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -29,5 +30,5 @@ public class Category {
     private LocalDateTime deleted_at;
 
     @OneToMany(mappedBy = "category")
-    private List<SubCategory> subCategories;
+    private List<SubCategory> subCategories =new ArrayList<>();
 }
