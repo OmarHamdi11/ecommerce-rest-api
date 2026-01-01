@@ -1,6 +1,6 @@
 # 🛒 E-commerce REST API
 
-A comprehensive, production-ready REST API for managing an e-commerce platform built with Spring Boot 3.5.7. This API provides complete functionality for product management, user authentication, reviews, and more.
+A comprehensive, production-ready REST API for managing an e-commerce platform built with Spring Boot 3.5.7. This API provides complete functionality for product management, user authentication, shopping cart, wishlist, orders, reviews, and more.
 
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.7-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
@@ -9,20 +9,17 @@ A comprehensive, production-ready REST API for managing an e-commerce platform b
 
 ## 📋 Table of Contents
 
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Configuration](#configuration)
-- [API Documentation](#api-documentation)
-- [Project Structure](#project-structure)
-- [Authentication](#authentication)
-- [Database Schema](#database-schema)
-- [Usage Examples](#usage-examples)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+- [Features](#-features)
+- [Technologies Used](#️-technologies-used)
+- [Getting Started](#-getting-started)
+- [API Documentation](#-api-documentation)
+- [Project Structure](#-project-structure)
+- [Authentication](#-authentication)
+- [Database Schema](#️-database-schema)
+- [Usage Examples](#-usage-examples)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Contact](#-contact)
 
 ## ✨ Features
 
@@ -49,6 +46,27 @@ A comprehensive, production-ready REST API for managing an e-commerce platform b
 - Multiple address management
 - User authentication history
 
+### 🛍️ Shopping Cart
+- Add/remove items from cart
+- Update item quantities
+- Real-time stock validation
+- Cart persistence across sessions
+- Price calculations
+
+### ❤️ Wishlist
+- Add/remove products to wishlist
+- Check product availability
+- Wishlist persistence
+- Product tracking
+
+### 📦 Order Management
+- Create orders from cart
+- Multiple order statuses (Pending, Processing, Shipped, Delivered, Cancelled)
+- Payment method selection
+- Order tracking
+- Admin order management
+- User order history
+
 ### ⭐ Review System
 - Product reviews and ratings
 - Admin approval workflow for reviews
@@ -61,7 +79,14 @@ A comprehensive, production-ready REST API for managing an e-commerce platform b
 - Automatic image optimization
 - Cover image functionality
 
-### 📊 Additional Features
+### 📊 Admin Dashboard
+- Dashboard statistics
+- Sales reports with date ranges
+- Recent activities tracking
+- Low stock products monitoring
+- Top selling products
+
+### 🔍 Additional Features
 - Pagination support for all list endpoints
 - Advanced search and filtering
 - Soft delete functionality
@@ -206,16 +231,41 @@ Once the application is running, access the interactive API documentation at:
 - `GET /{productId}/skus` - Get all product SKUs
 - `DELETE /skus/{skuId}` - Delete SKU (Admin)
 
-#### Product Attributes (`/api/v1/products/attributes`)
-- `POST /` - Create attribute (Admin)
-- `GET /` - Get all attributes
-- `GET /type/{type}` - Get attributes by type
+#### Shopping Cart (`/api/v1/cart`)
+- `GET /` - Get user cart
+- `POST /items` - Add item to cart
+- `PUT /items/{itemId}` - Update item quantity
+- `DELETE /items/{itemId}` - Remove item from cart
+- `DELETE /clear` - Clear cart
+
+#### Wishlist (`/api/v1/wishlist`)
+- `GET /` - Get user wishlist
+- `POST /items/{productId}` - Add item to wishlist
+- `DELETE /items/{productId}` - Remove item from wishlist
+- `GET /check/{productId}` - Check if product in wishlist
+- `DELETE /clear` - Clear wishlist
+
+#### Orders (`/api/v1/orders`)
+- `POST /` - Create order (User)
+- `GET /{orderId}` - Get order by ID
+- `GET /my-orders` - Get user orders (User)
+- `GET /` - Get all orders (Admin)
+- `PATCH /{orderId}/status` - Update order status (Admin)
+- `PATCH /{orderId}/cancel` - Cancel order (User)
 
 #### Reviews (`/api/v1/products`)
 - `POST /reviews` - Add review (User)
 - `GET /{productId}/reviews` - Get product reviews
 - `PATCH /reviews/{reviewId}/approve` - Approve review (Admin)
 - `DELETE /reviews/{reviewId}` - Delete review (Admin)
+
+#### Categories (`/api/v1/categories`)
+- `POST /` - Create category (Admin)
+- `PUT /{id}` - Update category (Admin)
+- `GET /{id}` - Get category by ID
+- `GET /` - Get all categories
+- `DELETE /{id}` - Delete category (Admin)
+- `POST /{categoryId}/subcategories` - Create subcategory (Admin)
 
 #### User Management (`/api/v1/user`)
 - `GET /` - Get current user profile
@@ -225,6 +275,13 @@ Once the application is running, access the interactive API documentation at:
 - `GET /address` - Get all addresses
 - `PUT /address/{addressId}` - Update address
 - `DELETE /address/{addressId}` - Delete address
+
+#### Admin Dashboard (`/api/v1/admin/dashboard`)
+- `GET /stats` - Get dashboard statistics
+- `GET /sales-report` - Get sales report
+- `GET /recent-activities` - Get recent activities
+- `GET /low-stock-products` - Get low stock products
+- `GET /top-products` - Get top selling products
 
 ## 📁 Project Structure
 
@@ -241,11 +298,15 @@ ecommerce-rest-api/
 │   │   │       │   └── service/        # Common services
 │   │   │       ├── config/             # Configuration classes
 │   │   │       ├── features/           # Feature modules
-│   │   │       │   ├── auth/          # Authentication
-│   │   │       │   ├── category/      # Categories
-│   │   │       │   ├── product/       # Products
-│   │   │       │   ├── review/        # Reviews
-│   │   │       │   └── user/          # Users
+│   │   │       │   ├── admin/          # Admin dashboard
+│   │   │       │   ├── auth/           # Authentication
+│   │   │       │   ├── cart/           # Shopping cart
+│   │   │       │   ├── category/       # Categories
+│   │   │       │   ├── order/          # Orders
+│   │   │       │   ├── product/        # Products
+│   │   │       │   ├── review/         # Reviews
+│   │   │       │   ├── user/           # Users
+│   │   │       │   └── wishlist/       # Wishlist
 │   │   │       ├── security/           # Security components
 │   │   │       └── utils/              # Utility classes
 │   │   └── resources/
@@ -324,6 +385,12 @@ Authorization: Bearer <your-jwt-token>
 - **categories** - Product categories
 - **sub_categories** - Product subcategories
 - **reviews** - Product reviews and ratings
+- **carts** - Shopping carts
+- **cart_items** - Cart items
+- **wishlists** - User wishlists
+- **wishlist_items** - Wishlist items
+- **orders** - Customer orders
+- **order_items** - Order items
 
 ## 💡 Usage Examples
 
@@ -373,6 +440,38 @@ Content-Type: application/json
 }
 ```
 
+### Adding Items to Cart
+
+```bash
+POST /api/v1/cart/items
+Authorization: Bearer <user-token>
+Content-Type: application/json
+
+{
+  "skuId": 1,
+  "quantity": 2
+}
+```
+
+### Creating an Order
+
+```bash
+POST /api/v1/orders
+Authorization: Bearer <user-token>
+Content-Type: application/json
+
+{
+  "paymentMethod": "CASH_ON_DELIVERY",
+  "shippingCost": 5.00,
+  "shippingName": "John Doe",
+  "shippingPhone": "+1234567890",
+  "shippingAddressLine1": "123 Main St",
+  "shippingCity": "New York",
+  "shippingCountry": "USA",
+  "shippingPostalCode": "10001"
+}
+```
+
 ### Adding a Review (User)
 
 ```bash
@@ -419,16 +518,16 @@ This project is licensed under the MIT License - see the [LICENSE](https://opens
 
 ## 🔮 Future Enhancements
 
-- [ ] Order management system
-- [ ] Payment gateway integration
-- [ ] Shopping cart functionality
-- [ ] Wishlist feature
-- [ ] Email notifications
-- [ ] Advanced analytics dashboard
-- [ ] Product recommendations
-- [ ] Multi-language support
-- [ ] Inventory management
+- [ ] Payment gateway integration (Stripe, PayPal)
+- [ ] Email notifications for orders and authentication
+- [ ] Advanced analytics dashboard with charts
+- [ ] Product recommendations based on user behavior
+- [ ] Multi-language support (i18n)
+- [ ] Advanced inventory management
 - [ ] Coupon/discount system
+- [ ] Customer support chat system
+- [ ] Product comparison feature
+- [ ] Export orders to PDF/Excel
 
 ---
 
