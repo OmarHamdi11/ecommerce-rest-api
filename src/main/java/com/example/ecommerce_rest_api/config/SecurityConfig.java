@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.List;
 
@@ -58,20 +57,20 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
-        http.cors(corsConfig -> corsConfig.configurationSource(
-                        (CorsConfigurationSource) request -> {
-                            CorsConfiguration config = new CorsConfiguration();
-                            config.setAllowedOriginPatterns(List.of(
-                                    "https://*.koyeb.app",
-                                    "http://localhost:*"
-                            ));
-                            config.setAllowedMethods(List.of("*"));
-                            config.setAllowCredentials(true);
-                            config.setAllowedHeaders(List.of("*"));
-                            config.setMaxAge(3600L);
-                            return config;
-                        }
-                ))
+        http.cors(corsConfig ->
+                        corsConfig.configurationSource(request -> {
+                    CorsConfiguration config = new CorsConfiguration();
+
+                    config.setAllowedOriginPatterns(List.of("*"));
+
+                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+                    config.setAllowedHeaders(List.of("*"));
+                    config.setExposedHeaders(List.of("Authorization"));
+                    config.setAllowCredentials(true);
+                    config.setMaxAge(3600L);
+
+                    return config;
+                }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints
